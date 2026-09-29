@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Noto Serif KR", ui-serif, Georgia, serif;
+
+  --color-paper: #faf7f2;
+  --color-paper-dim: #f2ebdf;
+  --color-paper-card: #ffffff;
+  --color-ink: #2e2620;
+  --color-ink-soft: #5b4f45;
+  --color-ink-faint: #8b7f72;
+  --color-border: #e6ddd0;
+  --color-brand: #5b4636;
+  --color-brand-soft: #8a6e5b;
+  --color-accent-sage: #6f7d5e;
+  --color-accent-sage-soft: #e4e9dd;
+  --color-accent-sky: #5b7a8a;
+  --color-accent-sky-soft: #e1ebee;
+  --color-accent-warm: #a8703f;
+  --color-accent-warm-soft: #f2e3d0;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-heading {
+  font-family: var(--font-serif);
+}
+
+::selection {
+  background-color: var(--color-accent-warm-soft);
+}
+
+/* 스크롤바를 은은하게 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+textarea,
+input {
+  font-family: inherit;
+}
