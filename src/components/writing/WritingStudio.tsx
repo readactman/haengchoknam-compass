@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Plus, PenLine } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { PageHeader } from '../common/PageHeader'
 import { Button } from '../common/Button'
 import { Card } from '../common/Card'
 import { EmptyState } from '../common/EmptyState'
 import { WritingEditor } from './WritingEditor'
+import { WritingIllustration } from '../illustrations'
 import { useWritings } from '../../data/hooks'
 import type { Writing, WritingStatus } from '../../types'
 
@@ -41,7 +42,7 @@ export function WritingStudio() {
       <div className="px-5 sm:px-8">
         {!writings || writings.length === 0 ? (
           <EmptyState
-            icon={<PenLine size={32} />}
+            icon={<WritingIllustration className="w-10 h-10" />}
             title="아직 시작한 글이 없어요"
             description="성찰과 독서 기록을 모아 하나의 글로 엮어보세요."
             action={<Button onClick={() => setMode('new')}>새 글 시작하기</Button>}

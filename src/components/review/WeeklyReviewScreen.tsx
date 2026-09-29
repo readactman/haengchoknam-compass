@@ -3,7 +3,8 @@ import { Card } from '../common/Card'
 import { useActions, useActivityLogs, useReflections } from '../../data/hooks'
 import { computeWeeklyReview, recoveryMessage } from '../../lib/calculations'
 import { formatKoreanDateShort } from '../../lib/date'
-import { BookOpen, NotebookPen, PenLine, CheckCircle2, RotateCcw, ArrowRightCircle } from 'lucide-react'
+import { BookOpen, NotebookPen, PenLine, CheckCircle2, ArrowRightCircle } from 'lucide-react'
+import { RecoveryIllustration } from '../illustrations'
 
 const FACES = ['', '😔', '😐', '🙂', '😊', '🤩']
 
@@ -51,7 +52,7 @@ export function WeeklyReviewScreen() {
 
           <Card className="p-5">
             <div className="flex items-center gap-2 text-ink-faint text-sm mb-3">
-              <RotateCcw size={16} />
+              <RecoveryIllustration className="w-5 h-5" />
               복귀력
             </div>
             <p className="text-ink leading-relaxed mb-2">{recoveryMessage(review.recovery.latest)}</p>

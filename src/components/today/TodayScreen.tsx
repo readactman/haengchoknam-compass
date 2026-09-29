@@ -1,6 +1,13 @@
 import { useState } from 'react'
-import { BookOpen, NotebookPen, PenLine, CheckCircle2, Circle } from 'lucide-react'
+import { Circle } from 'lucide-react'
 import { TodayCard } from './TodayCard'
+import {
+  ActionIllustration,
+  CompassIllustration,
+  ReadingIllustration,
+  ReflectionIllustration,
+  WritingIllustration,
+} from '../illustrations'
 import { ReadingEntryForm } from '../reading/ReadingEntryForm'
 import { ReflectionForm } from '../reflection/ReflectionForm'
 import { ActionForm } from '../action/ActionForm'
@@ -37,22 +44,25 @@ export function TodayScreen() {
 
   return (
     <div>
-      <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-5">
-        <h1 className="font-heading text-2xl text-ink leading-snug">
-          오늘 무엇을 읽고,
-          <br />
-          무엇을 생각하고,
-          <br />
-          무엇을 행동하시겠습니까?
-        </h1>
-        {showRecoveryNote && (
-          <p className="text-sm text-accent-sage mt-3">{recoveryMessage(recovery!.latest)}</p>
-        )}
+      <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-5 flex items-start gap-4">
+        <CompassIllustration className="w-14 h-14 shrink-0 text-brand-soft mt-1" />
+        <div>
+          <h1 className="font-heading text-2xl text-ink leading-snug">
+            오늘 무엇을 읽고,
+            <br />
+            무엇을 생각하고,
+            <br />
+            무엇을 행동하시겠습니까?
+          </h1>
+          {showRecoveryNote && (
+            <p className="text-sm text-accent-sage mt-3">{recoveryMessage(recovery!.latest)}</p>
+          )}
+        </div>
       </div>
 
       <div className="px-5 sm:px-8 grid sm:grid-cols-2 gap-4 pb-8">
         <TodayCard
-          icon={BookOpen}
+          icon={<ReadingIllustration className="w-6 h-6" />}
           title="오늘의 독서"
           accentClass="bg-accent-sky-soft text-accent-sky"
           onAdd={() => setReadingOpen(true)}
@@ -72,7 +82,7 @@ export function TodayScreen() {
         </TodayCard>
 
         <TodayCard
-          icon={NotebookPen}
+          icon={<ReflectionIllustration className="w-6 h-6" />}
           title="오늘의 생각"
           accentClass="bg-accent-warm-soft text-accent-warm"
           onAdd={() => setReflectionOpen(true)}
@@ -91,7 +101,7 @@ export function TodayScreen() {
         </TodayCard>
 
         <TodayCard
-          icon={PenLine}
+          icon={<WritingIllustration className="w-6 h-6" />}
           title="오늘의 글쓰기"
           accentClass="bg-accent-sage-soft text-accent-sage"
           onAdd={() => goTo('writing')}
@@ -111,7 +121,7 @@ export function TodayScreen() {
         </TodayCard>
 
         <TodayCard
-          icon={CheckCircle2}
+          icon={<ActionIllustration className="w-6 h-6" />}
           title="오늘의 행동"
           accentClass="bg-brand-soft/20 text-brand-soft"
           onAdd={() => setActionOpen(true)}

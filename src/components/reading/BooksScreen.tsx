@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Plus, BookOpen } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { PageHeader } from '../common/PageHeader'
 import { Button } from '../common/Button'
 import { Card } from '../common/Card'
 import { EmptyState } from '../common/EmptyState'
+import { ReadingIllustration } from '../illustrations'
 import { BookForm } from './BookForm'
 import { BookDetail } from './BookDetail'
 import { useBooks } from '../../data/hooks'
@@ -57,7 +58,7 @@ export function BooksScreen() {
       <div className="px-5 sm:px-8">
         {!books || books.length === 0 ? (
           <EmptyState
-            icon={<BookOpen size={32} />}
+            icon={<ReadingIllustration className="w-10 h-10" />}
             title="아직 등록한 책이 없어요"
             description="지금 읽고 있는 책을 추가하면 독서 기록을 남길 수 있어요."
             action={<Button onClick={() => setFormOpen(true)}>책 추가하기</Button>}

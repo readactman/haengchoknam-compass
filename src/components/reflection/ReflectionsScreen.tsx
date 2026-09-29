@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Plus, NotebookPen } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { PageHeader } from '../common/PageHeader'
 import { Button } from '../common/Button'
 import { EmptyState } from '../common/EmptyState'
 import { ReflectionForm } from './ReflectionForm'
 import { ReflectionCard } from './ReflectionCard'
+import { ReflectionIllustration } from '../illustrations'
 import { useActions, useReflections } from '../../data/hooks'
 import { REFLECTION_CATEGORIES, type ReflectionCategory } from '../../types'
 
@@ -55,7 +56,7 @@ export function ReflectionsScreen() {
 
         {!reflections || reflections.length === 0 ? (
           <EmptyState
-            icon={<NotebookPen size={32} />}
+            icon={<ReflectionIllustration className="w-10 h-10" />}
             title="아직 남긴 생각이 없어요"
             description="책을 읽다가, 혹은 하루를 보내다가 떠오른 생각을 적어보세요."
             action={<Button onClick={() => setFormOpen(true)}>생각 기록하기</Button>}

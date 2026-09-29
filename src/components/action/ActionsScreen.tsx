@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Circle, CheckCircle2, Plus, Trash2, ListTodo } from 'lucide-react'
+import { Circle, CheckCircle2, Plus, Trash2 } from 'lucide-react'
 import { PageHeader } from '../common/PageHeader'
 import { Button } from '../common/Button'
 import { Card } from '../common/Card'
 import { EmptyState } from '../common/EmptyState'
 import { ActionForm } from './ActionForm'
+import { ActionIllustration } from '../illustrations'
 import { SatisfactionPicker } from './SatisfactionPicker'
 import { useActions } from '../../data/hooks'
 import { deleteAction, reopenAction } from '../../data/services'
@@ -36,7 +37,7 @@ export function ActionsScreen() {
           <h2 className="text-xs font-medium text-ink-faint mb-2 px-1">진행 중 · {open.length}</h2>
           {open.length === 0 ? (
             <EmptyState
-              icon={<ListTodo size={28} />}
+              icon={<ActionIllustration className="w-9 h-9" />}
               title="지금 진행 중인 행동이 없어요"
               description="성찰에서 이어지거나, 직접 작은 행동을 추가해보세요."
             />

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Plus, Compass, Trash2, Pencil } from 'lucide-react'
+import { Plus, Trash2, Pencil } from 'lucide-react'
 import { PageHeader } from '../common/PageHeader'
 import { Button } from '../common/Button'
 import { Card } from '../common/Card'
 import { EmptyState } from '../common/EmptyState'
 import { PrincipleForm } from './PrincipleForm'
+import { CompassIllustration } from '../illustrations'
 import { usePrinciples } from '../../data/hooks'
 import { deletePrinciple } from '../../data/services'
 import type { Principle } from '../../types'
@@ -41,7 +42,7 @@ export function PrinciplesScreen() {
       <div className="px-5 sm:px-8">
         {!principles || principles.length === 0 ? (
           <EmptyState
-            icon={<Compass size={32} />}
+            icon={<CompassIllustration className="w-10 h-10" />}
             title="아직 정리한 원칙이 없어요"
             description="살아가며 중요하다고 느낀 문장을 원칙으로 남겨보세요."
             action={<Button onClick={openNew}>원칙 추가하기</Button>}

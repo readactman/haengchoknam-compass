@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react'
-import type { LucideIcon } from 'lucide-react'
 import { Plus } from 'lucide-react'
 import { Card } from '../common/Card'
 
 interface TodayCardProps {
-  icon: LucideIcon
+  icon: ReactNode
   title: string
   accentClass: string
   onAdd: () => void
@@ -12,13 +11,13 @@ interface TodayCardProps {
   children?: ReactNode
 }
 
-export function TodayCard({ icon: Icon, title, accentClass, onAdd, addLabel, children }: TodayCardProps) {
+export function TodayCard({ icon, title, accentClass, onAdd, addLabel, children }: TodayCardProps) {
   return (
     <Card className="p-5">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
-          <div className={`w-9 h-9 rounded-full flex items-center justify-center ${accentClass}`}>
-            <Icon size={17} />
+        <div className="flex items-center gap-3">
+          <div className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center ${accentClass}`}>
+            {icon}
           </div>
           <h3 className="font-heading text-ink">{title}</h3>
         </div>
