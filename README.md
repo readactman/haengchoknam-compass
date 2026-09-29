@@ -4,30 +4,47 @@
 
 읽고(READ), 생각하고(THINK), 쓰고(WRITE), 행동하고(ACT), 다시 돌아보는(REFLECT) 과정을 하나로 연결하는 개인용 Life OS입니다. 습관의 연속 기록(streak)보다 **중단 후 얼마나 빨리 돌아왔는지(복귀력)**를 더 중요한 지표로 다룹니다.
 
+🔗 **배포된 앱**: https://haengchoknam-compass.vercel.app
+📦 **저장소**: https://github.com/readactman/haengchoknam-compass
+
+## 배포 구성
+
+- **프론트엔드**: Vercel (GitHub `master` 브랜치에 푸시하면 자동 재배포)
+- **데이터베이스**: Supabase (Postgres + Realtime). 프로젝트명 `haengchoknam-compass`
+- 로그인 없이 배포된 개인용 앱이라, `VITE_SUPABASE_ANON_KEY`(publishable key)로 RLS를 켠 채 전체 CRUD를 허용하는 구성입니다. 여러 사람이 함께 쓰거나 공개적으로 링크를 공유할 계획이라면 Supabase Auth를 추가하고 RLS 정책을 본인 데이터로 제한하는 것을 권장합니다.
+
 ## 설치 및 실행
 
 ```bash
 npm install
-npm run dev       # 개발 서버 (http://localhost:5173)
-npm run build      # 프로덕션 빌드 (dist/)
-npm run preview    # 빌드 결과 미리보기
-npm run test       # vitest 실행 (watch)
-npx vitest run     # vitest 1회 실행
-npm run lint        # oxlint
-npx tsc -b          # 타입 체크
+cp .env.example .env.local   # Supabase 프로젝트 URL / anon key 입력
+npm run dev        # 개발 서버 (http://localhost:5173)
+npm run build       # 프로덕션 빌드 (dist/)
+npm run preview     # 빌드 결과 미리보기
+npm run test        # vitest 실행 (watch)
+npx vitest run      # vitest 1회 실행
+npm run lint         # oxlint
+npx tsc -b           # 타입 체크
 ```
 
-Node.js 18 이상을 권장합니다.
+Node.js 18 이상을 권장합니다. `.env.local`이 없으면 `src/db/supabaseClient.ts`가 명확한 한국어 에러로 실행을 막습니다.
+
+### Supabase 프로젝트 처음부터 만들기
+
+1. [supabase.com](https://supabase.com)에서 새 프로젝트를 만듭니다.
+2. SQL Editor에서 이 저장소의 스키마(테이블 생성 + RLS 정책 + `supabase_realtime` publication 등록)를 실행합니다. 컬럼은 `src/types/index.ts`의 camelCase 필드명을 snake_case로 바꾼 것과 1:1로 대응합니다(`src/data/mappers.ts`가 자동 변환).
+3. Project Settings → API Keys에서 Project URL과 publishable(anon) key를 복사해 `.env.local`(로컬) 또는 Vercel의 Environment Variables(배포)에 넣습니다.
 
 ## 프로젝트 구조
 
 ```
 src/
   types/            데이터 모델(인터페이스) 정의
-  db/db.ts          Dexie(IndexedDB) 스키마
+  db/supabaseClient.ts  Supabase 클라이언트 초기화
   data/
     services.ts     CRUD 서비스 레이어 (UI는 이 함수만 호출)
-    hooks.ts        dexie-react-hooks 기반 useLiveQuery 래퍼
+    hooks.ts        Supabase 조회 + realtime 구독 기반 React 훅
+    mappers.ts       camelCase(TS) <-> snake_case(Postgres) 변환
     seed.ts         첫 실행 시 샘플 데이터
     exportImport.ts JSON 백업 내보내기/가져오기
   lib/
@@ -37,6 +54,7 @@ src/
   nav/NavContext.tsx  화면 전환 상태(간단한 상태 기반 라우팅)
   components/
     layout/         AppShell(사이드바/모바일 하단 탭)
+    illustrations/  화면별 손그림 느낌 SVG 일러스트
     today/          오늘 화면
     reading/        서재(책 목록/상세), 독서 기록
     reflection/      성찰 목록/작성, "가장 작은 행동" 연결
@@ -58,7 +76,8 @@ src/
 - **나의 원칙**: 살아가며 중요하다고 느낀 문장을 원칙으로 남기고, 그 배경이 된 독서 기록/성찰/글을 연결합니다.
 - **주간 회고**: 최근 7일의 활동을 요약합니다. 가장 먼저 보여주는 숫자는 streak이 아니라 **성찰→행동 전환율**과 **복귀력**입니다.
 - **데이터 내보내기/가져오기**: 모든 데이터를 JSON으로 내려받거나, 백업 파일로 복원할 수 있습니다.
-- **PWA**: 모바일 홈 화면에 설치할 수 있습니다(오프라인 캐싱 포함).
+- **PWA**: 모바일 홈 화면에 설치할 수 있습니다(오프라인 캐싱 포함). 새 배포가 올라간 뒤에는 서비스 워커가 자동으로 갱신됩니다.
+- **일러스트**: 독서/성찰/글쓰기/행동/원칙/복귀력마다 어울리는 손그림 느낌의 SVG를 오늘 화면 카드와 빈 상태 화면에 배치해, 텍스트만 있는 화면이 되지 않도록 했습니다(`src/components/illustrations`).
 - **투자 의사결정 저널**: 데이터 타입(`InvestmentDecision`)과 서비스 함수는 준비되어 있으나, 철학에 맞게 초기 화면에는 노출하지 않았습니다. 향후 화면만 추가하면 바로 사용할 수 있습니다.
 
 ## 데이터 모델 (`src/types/index.ts`)
@@ -74,7 +93,9 @@ src/
 
 ## 데이터 저장 방식
 
-MVP 단계에서는 서버 없이 브라우저의 **IndexedDB**(Dexie.js, `src/db/db.ts`)에 모든 데이터를 저장합니다. UI는 `src/data/services.ts`의 함수만 호출하도록 계층을 분리했기 때문에, 이후 Supabase 등 외부 백엔드로 옮길 때는 **이 서비스 레이어의 구현만 교체**하면 됩니다(함수 시그니처와 반환 타입은 그대로 유지하고, 내부에서 Dexie 호출 대신 Supabase 클라이언트 호출로 바꾸는 방식). `src/data/hooks.ts`의 `useLiveQuery` 기반 훅들도 Supabase의 realtime 구독으로 자연스럽게 대체할 수 있는 구조입니다.
+모든 데이터는 **Supabase(Postgres)**에 저장됩니다. UI는 `src/data/services.ts`의 함수만 호출하도록 계층을 분리했기 때문에, 다른 백엔드로 옮길 때는 **이 서비스 레이어(및 `hooks.ts`, `seed.ts`, `exportImport.ts`)의 구현만 교체**하면 됩니다(함수 시그니처와 반환 타입은 그대로 유지). `src/data/hooks.ts`는 초기 조회 후 Supabase의 `postgres_changes` realtime 구독으로 갱신되므로, 여러 탭/기기에서 동시에 앱을 열어도 새로고침 없이 서로 반영됩니다.
+
+여러 사용자가 아닌 **개인용 앱**이므로 로그인 없이 배포했고, `anon` 키에 대해 모든 테이블에 열린 RLS 정책을 두었습니다. 즉 배포 URL이나 `anon` 키를 아는 사람은 누구나 데이터를 읽고 쓸 수 있습니다 — 저장소를 Public으로 공개하기로 했으므로 `anon` 키 자체는 번들에 그대로 노출됩니다. 나중에 접근을 제한하고 싶다면 Supabase Auth(매직 링크 등)를 추가하고, RLS 정책을 `auth.uid()` 기준으로 좁히면 됩니다.
 
 ## 복귀력(회복탄력) 계산 방식
 
@@ -106,13 +127,13 @@ MVP 단계에서는 서버 없이 브라우저의 **IndexedDB**(Dexie.js, `src/d
 - 복귀 통계(평균 복귀 일수) 계산
 - 주간 회고 통계(활동일 수, 전환율, 평균 만족도) 계산
 
-## 향후 Supabase 연동 가이드
+## 로그인을 추가하고 싶다면
 
-1. `src/db/db.ts`를 대체할 Supabase 클라이언트 초기화 파일을 추가합니다.
-2. `src/data/services.ts`의 각 함수 내부 구현을 Supabase 쿼리로 교체합니다(함수 시그니처는 그대로 유지).
-3. `src/data/hooks.ts`의 `useLiveQuery`를 Supabase realtime 구독 + `useState`/`useEffect` 조합으로 교체합니다.
-4. 로그인/사용자 식별이 필요하다면 각 테이블에 `user_id` 컬럼을 추가하고, RLS(Row Level Security)로 본인 데이터만 접근하도록 설정합니다.
-5. 기존 IndexedDB 사용자를 위해 `exportAllData()` → Supabase에 일괄 삽입하는 마이그레이션 스크립트를 추가하면 데이터 이전도 매끄럽게 처리할 수 있습니다.
+1. Supabase Auth를 활성화하고, 원하는 로그인 방식(매직 링크, OAuth 등)을 설정합니다.
+2. 각 테이블에 `user_id uuid references auth.users` 컬럼을 추가합니다.
+3. 지금의 "전체 허용" RLS 정책(`using (true)`)을 `using (auth.uid() = user_id)`로 좁히고, insert 시 `user_id`를 자동으로 채우는 트리거나 클라이언트 로직을 추가합니다.
+4. `src/App.tsx`에 로그인 여부에 따른 화면 분기를 추가합니다.
+5. 기존에 쌓인 데이터가 있다면 `exportAllData()`로 백업한 뒤, `user_id`를 채워 다시 가져오면 됩니다.
 
 ## 향후 AI 연동 가이드
 
